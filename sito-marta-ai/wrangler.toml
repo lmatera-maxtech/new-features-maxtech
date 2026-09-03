@@ -1,5 +1,0 @@
-name = "new-features-maxtech"
-compatibility_date = "2026-09-03"
-
-[assets]
-directory = "./public"
