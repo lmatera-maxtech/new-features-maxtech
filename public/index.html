@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Integrazione Marta AI · Direct Intelligence → OneForm</title>
+<title>Integrazione Marta AI · Nuovo flusso</title>
 <meta name="theme-color" content="#2A1038">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -178,6 +178,12 @@ body{
   background:rgba(196,58,213,.16);color:#F0BFF4;padding:1.5px 5px;border-radius:4px;
   white-space:nowrap;
 }
+.tags{list-style:none;display:flex;flex-wrap:wrap;gap:7px;margin:0;padding:0}
+.tags li{
+  font-size:13px;line-height:1.3;color:var(--cream);
+  background:var(--plum);border:1px solid var(--hair);
+  padding:6px 11px;border-radius:7px;
+}
 .facts{list-style:none;margin:0;padding:0}
 .facts li{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--hair);font-size:14px}
 .facts li:last-child{border-bottom:0}
@@ -319,6 +325,10 @@ body{
             uno screenshot con uno di proporzioni diverse vanno
             ricontrollate le coordinate dei riquadri qui sotto.
    cap      act = il controllo che si clicca · ctx = contesto.
+   body     h = titolo sezione. Poi una sola di queste tre:
+            p     elenco di paragrafi
+            items categorie di dati, rese a pillole (senza valori)
+            facts coppie categoria/stato, rese in tabella
    branches kind: 'go' avanza · 'warn' alternativa · 'stop' si ferma.
             to = numero dello step di arrivo (omesso se non porta altrove).
             L'ordine determina la numerazione mostrata nei riquadri.
@@ -335,10 +345,8 @@ const FLOW = [
         'Marta accoglie la chiamata inbound, qualifica il cliente e raccoglie e valida i dati della fornitura. Completata questa fase, la pratica viene predisposta e la chiamata inoltrata alla coda di competenza.',
         'La modale espone le sole informazioni necessarie alla presa in carico. La fase di consulenza, conversione e sottoscrizione del contratto resta in carico all’operatore.'
       ]},
-      {h:'Dati esposti in questa fase', facts:[
-        ['Cliente','Tommaso C.'],
-        ['Coda','coda_energia_ai'],
-        ['Stato operatore','Disponibile']
+      {h:'Dati esposti in questa fase', items:[
+        'Identificativo cliente','Coda di provenienza','Stato operatore'
       ]}
     ],
     branches:[
@@ -358,14 +366,10 @@ const FLOW = [
       {h:'Cosa succede', p:[
         'Il pannello <code>Subentro AI</code> riporta l’esito della conversazione con Marta: intent riconosciuto, riassunto della chiamata, identificativo della pratica predisposta e dati tecnici della fornitura.'
       ]},
-      {h:'Dati disponibili all’operatore', facts:[
-        ['Intent','intent_ivr_marta'],
-        ['Riassunto','Nuovo contratto luce uso domestico, dati raccolti e confermati'],
-        ['Contratto AI','36232583-2162-4eec…'],
-        ['Stato bozza','BOZZA'],
-        ['Tipologia','switch · privato · luce'],
-        ['POD','IT01********'],
-        ['Comune','Milano']
+      {h:'Dati disponibili all’operatore', items:[
+        'Intent riconosciuto','Riassunto della chiamata','Identificativo contratto AI',
+        'Stato della bozza','Tipologia di contratto','Privato o business',
+        'Tipo di fornitura','Codice fiscale','Codice POD','Comune di fornitura'
       ]}
     ],
     branches:[
@@ -412,10 +416,8 @@ const FLOW = [
         'L’operatore atterra direttamente nel Catalogo delle Offerte, senza ripetere l’inserimento dei dati della bolletta: la lavorazione di Marta ha già generato il catalogo disponibile per il cliente.',
         'Tipologia di contratto e dati di fornitura provengono dalla pratica predisposta in chiamata.'
       ]},
-      {h:'Dati ereditati dalla pratica', facts:[
-        ['Step di accesso','Catalogo offerte'],
-        ['Tipologia','switch'],
-        ['Fornitura','luce, uso domestico']
+      {h:'Dati ereditati dalla pratica', items:[
+        'Tipologia di contratto','Tipo di fornitura','Uso della fornitura','Anagrafica cliente'
       ]}
     ],
     branches:[
@@ -438,10 +440,10 @@ const FLOW = [
         'Nome e cognome sono pre-popolati e vanno verificati in chiamata. L’indirizzo è selezionabile da elenco; il civico si seleziona in un secondo passaggio, successivo alla scelta della via.'
       ]},
       {h:'Stato dei campi', facts:[
-        ['Nome','TOMMASO · pre-popolato'],
-        ['Cognome','CALCINA · pre-popolato'],
+        ['Nome','pre-popolato'],
+        ['Cognome','pre-popolato'],
         ['E-mail','da raccogliere'],
-        ['Indirizzo','da selezionare'],
+        ['Indirizzo di attivazione','da selezionare'],
         ['Civico','da selezionare']
       ]}
     ],
@@ -463,10 +465,8 @@ const FLOW = [
         'Lo step serve innanzitutto a completare la raccolta dei dati mancanti. Solo successivamente viene effettuato il controllo di coerenza sui dati inseriti: la provincia dell’indirizzo indicato dall’operatore viene confrontata con la provincia recuperata precedentemente da Marta.',
         'La sequenza è quindi: completamento dei dati, controllo dei dati, esito del controllo, prosecuzione o ritorno all’inserimento dati.'
       ]},
-      {h:'Dati inseriti', facts:[
-        ['E-mail','lorenzo.matera@yopmail.com'],
-        ['Indirizzo','Via Empoli — Milano (MI)'],
-        ['Civico','11']
+      {h:'Dati inseriti dall’operatore', items:[
+        'E-mail del cliente','Indirizzo di attivazione','Civico'
       ]}
     ],
     branches:[
@@ -532,13 +532,9 @@ const FLOW = [
         'L’operatore viene riportato al primo step di OneForm in tre casi: la provincia dell’indirizzo inserito non coincide con quella recuperata da Marta e viene utilizzato Torna all’inserimento dati; su Call viene scelto Prosegui la Pratica e i controlli di OneForm restituiscono un errore; si verifica un errore tecnico durante il trasferimento della chiamata.',
         'In tutti i casi i dati già disponibili sono mantenuti pre-popolati: l’operatore non deve reinserire da zero le informazioni raccolte in chiamata. L’indirizzo di attivazione può richiedere una nuova selezione quando il recupero non va a buon fine, come segnalato in pagina.'
       ]},
-      {h:'Dati mantenuti', facts:[
-        ['Nome e cognome','TOMMASO CALCINA'],
-        ['Codice fiscale','CLCTMS91H16D150K'],
-        ['Codice POD','IT012E00377526'],
-        ['Consumo','2700 kWh'],
-        ['Fornitore attuale','Eni Plenitude S.p.A.'],
-        ['Indirizzo','da riselezionare']
+      {h:'Dati mantenuti pre-popolati', items:[
+        'Nome e cognome','Codice fiscale','Codice POD','Consumo annuo',
+        'Fornitore attuale','Distributore attuale','Tipologia di abitazione'
       ]}
     ],
     branches:[
@@ -575,7 +571,9 @@ FLOW.forEach(s => {
   const cap = `${s.cap.act ? `<i></i><b>${s.cap.act}</b> — ` : ''}${s.cap.ctx}`;
 
   const body = (s.body||[]).map(b => {
-    const inner = b.facts
+    const inner = b.items
+      ? `<ul class="tags">${b.items.map(t=>`<li>${t}</li>`).join('')}</ul>`
+      : b.facts
       ? `<ul class="facts">${b.facts.map(f=>`<li><span>${f[0]}</span><b>${f[1]}</b></li>`).join('')}</ul>`
       : b.p.map(t=>`<p>${t}</p>`).join('');
     return `<div class="sec"><h3>${b.h}</h3>${inner}</div>`;
