@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Integrazione Marta AI · Nuovo flusso</title>
+<title>Guide operative Marta AI · Supermoney Energia</title>
 <meta name="theme-color" content="#2A1038">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -104,6 +104,27 @@ body{
   .handoff .h-di{box-shadow:inset 0 3px 0 var(--di)}
   .handoff .h-of{box-shadow:inset 0 3px 0 var(--of)}
 }
+/* ── selezione guide ─────────────────────────────── */
+.guide-grid{
+  display:grid;grid-template-columns:1fr;gap:10px;width:100%;max-width:820px;margin:0 0 8px;
+}
+.guide-card{
+  width:100%;text-align:left;color:var(--cream);background:rgba(66,31,89,.72);
+  border:1px solid var(--hair);border-radius:14px;padding:16px 17px;cursor:pointer;
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 14px;align-items:center;
+  transition:transform .16s,border-color .16s,background .16s;
+}
+.guide-card:hover{transform:translateY(-1px);background:var(--plum);border-color:rgba(239,233,221,.28)}
+.guide-card:active{transform:scale(.992)}
+.guide-card.featured{box-shadow:inset 3px 0 0 var(--magenta)}
+.guide-kicker{font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--cream-dim)}
+.guide-card.featured .guide-kicker{color:#F2A9EF}
+.guide-card strong{font-family:var(--display);font-size:16px;font-weight:600;line-height:1.2;display:block;margin-top:3px}
+.guide-card p{grid-column:1;margin:0!important;color:var(--cream-dim);font-size:12.5px;line-height:1.4;max-width:52ch!important}
+.guide-open{grid-column:2;grid-row:1 / span 2;align-self:center;color:var(--magenta);font-family:var(--display);font-weight:600;font-size:13px;white-space:nowrap}
+.guide-badge{display:inline-block;margin-left:7px;padding:2px 6px;border-radius:99px;background:rgba(231,0,226,.16);color:#F4B6F1;font-size:9px;letter-spacing:.06em;vertical-align:1px}
+@media (min-width:680px){.guide-grid{grid-template-columns:1fr 1fr}.guide-card{min-height:138px}.guide-card p{grid-column:1 / -1}.guide-open{grid-column:2;grid-row:1;align-self:start;margin-top:3px}}
+
 .start{
   display:inline-flex;align-items:center;gap:11px;align-self:flex-start;
   background:var(--magenta);color:#fff;border:0;cursor:pointer;
@@ -289,7 +310,7 @@ body{
   <header class="bar">
     <div class="bar-top">
       <span class="pulse" aria-hidden="true"></span>
-      <span class="bar-title">Integrazione Marta AI</span>
+      <span class="bar-title">Guide operative Marta AI</span>
       <span class="bar-sub" id="barSub">Supermoney Energia</span>
     </div>
     <div class="seg" id="seg" role="tablist" aria-label="Step del flusso"></div>
@@ -333,7 +354,7 @@ body{
             to = numero dello step di arrivo (omesso se non porta altrove).
             L'ordine determina la numerazione mostrata nei riquadri.
    ═══════════════════════════════════════════════════════════ */
-const FLOW = [
+const FLOW_MARTA = [
   {
     n:1, app:'di', appName:'Direct Intelligence', img:'img/01-richiesta-trasferimento.webp',
     title:'Richiesta di trasferimento',
@@ -357,26 +378,26 @@ const FLOW = [
     ]
   },
   {
-    n:2, app:'di', appName:'Direct Intelligence', img:'img/02-presa-in-carico.webp',
-    title:'Presa in carico e scheda cliente',
-    lede:'I dati raccolti e validati da Marta sono disponibili prima dell’inizio della conversazione.',
-    hots:[{x:25.1,y:61.3,w:37.5,h:56.6,kind:'note'}],
-    cap:{ctx:'Il pannello evidenziato riporta l’esito della lavorazione di Marta. A destra lo script privacy da riferire in apertura.'},
+    n:2, app:'di', appName:'Direct Intelligence', img:'img/11-pratica-ai-overview.png',
+    title:'Presa in carico e Pratica AI',
+    lede:'La nuova sezione mette in primo piano il motivo della chiamata e lo stato dei dati già disponibili.',
+    hots:[{x:43.5,y:58.0,w:72.0,h:61.0,kind:'note'}],
+    cap:{ctx:'Pratica AI · richiesta del cliente, dati raccolti ed eventuale errore in un’unica vista.'},
     body:[
       {h:'Cosa succede', p:[
-        'Il pannello <code>Subentro AI</code> riporta l’esito della conversazione con Marta: intent riconosciuto, riassunto della chiamata, identificativo della pratica predisposta e dati tecnici della fornitura.'
+        'La sezione <code>Pratica AI</code> aiuta a riprendere subito la conversazione: prima mostra la richiesta del cliente, poi i dati già disponibili e le eventuali informazioni da recuperare o verificare.'
       ]},
-      {h:'Dati disponibili all’operatore', items:[
-        'Intent riconosciuto','Riassunto della chiamata','Identificativo contratto AI',
-        'Stato della bozza','Tipologia di contratto','Privato o business',
-        'Tipo di fornitura','Codice fiscale','Codice POD','Comune di fornitura'
+      {h:'Informazioni principali', items:[
+        'Richiesta del cliente','Dettagli della conversazione','Nome e cognome',
+        'Codice fiscale','POD/PDR','Provincia','Luce/Gas e tipologia pratica',
+        'Eventuale errore','Coda'
       ]}
     ],
     branches:[
       {kind:'go', label:'Accesso a OneForm', to:3,
-       p:'Verificato il riassunto e riferito lo script privacy, l’operatore accede a OneForm dalla barra chiamata.'},
-      {kind:'warn', label:'Dati non confermati dal cliente',
-       p:'I campi vanno corretti in scheda prima di accedere a OneForm. In alternativa si procede con l’opzione Nuovo Contratto allo step successivo.'}
+       p:'Verificato il contesto e riferito lo script privacy, l’operatore accede a OneForm dalla barra chiamata.'},
+      {kind:'warn', label:'Dato mancante o da verificare',
+       p:'L’indicazione nella Pratica AI evidenzia il dato da recuperare o controllare con il cliente prima di proseguire.'}
     ]
   },
   {
@@ -546,23 +567,114 @@ const FLOW = [
   }
 ];
 
+
+
+const FLOW_CALL = [
+  {
+    n:1, app:'di', appName:'Direct Intelligence', img:'img/10-modale-as-is.png',
+    title:'Com’è oggi la modale',
+    lede:'Oggi la sezione Subentro AI mostra dati e informazioni nello stesso elenco.',
+    cap:{ctx:'Situazione attuale · sezione Subentro AI nella modale Call.'},
+    body:[
+      {h:'Oggi', p:[
+        'L’operatore deve leggere l’intero blocco per capire il motivo della chiamata, quali dati sono già presenti e se ci sono informazioni da controllare.'
+      ]}
+    ],
+    branches:[
+      {kind:'go', label:'Guarda la nuova Pratica AI', to:2,
+       p:'Nella nuova versione le informazioni sono ordinate per aiutare l’operatore a capire subito cosa deve fare.'}
+    ]
+  },
+  {
+    n:2, app:'di', appName:'Direct Intelligence', img:'img/16-pratica-ai-happy-flow.png',
+    title:'Quando Marta AI ha raccolto tutti i dati',
+    lede:'Tutti i dati necessari risultano OK. L’operatore può proseguire senza doverli chiedere o verificare di nuovo.',
+    cap:{act:'Tutti i dati OK', ctx:'Non ci sono verifiche aggiuntive da fare sui dati raccolti.'},
+    body:[
+      {h:'Cosa vede l’operatore', p:[
+        'La richiesta del cliente è subito visibile e tutti i dati principali risultano OK.',
+        'Se serve più contesto, il pulsante Dettagli permette di leggere un breve riepilogo della conversazione già avuta con Marta AI.',
+        'In questo caso il blocco Errore non viene mostrato, perché non ci sono anomalie da gestire.'
+      ]},
+      {h:'Questa visualizzazione vale per', items:[
+        'Trasferimenti live da Marta AI','Lead da ricontattare generate da Marta AI'
+      ]}
+    ],
+    branches:[
+      {kind:'go', label:'Guarda il caso con dati da verificare', to:3,
+       p:'Se alcuni dati richiedono un controllo, la modale li evidenzia in modo chiaro.'}
+    ]
+  },
+  {
+    n:3, app:'di', appName:'Direct Intelligence', img:'img/14-pratica-ai-dati-verificare.png',
+    title:'Quando ci sono dati da verificare',
+    lede:'Se durante la gestione con Marta AI viene rilevato un problema, la modale indica subito quali dati devono essere controllati.',
+    cap:{act:'Dati da verificare', ctx:'I dati corretti restano OK. Quelli da controllare vengono evidenziati.'},
+    body:[
+      {h:'Cosa deve fare l’operatore', p:[
+        'I dati corretti restano indicati come OK. I dati che richiedono un controllo vengono indicati come Da verificare.',
+        'Quando è presente un problema viene mostrato anche il blocco Errore, con una breve indicazione su cosa controllare con il cliente.',
+        'Se un dato non è stato raccolto, viene indicato come Mancante.'
+      ]},
+      {h:'Come leggere gli stati', items:[
+        '✓ OK · dato già raccolto','! Da verificare · dato da controllare',
+        '✕ Mancante · dato da chiedere','Errore · indica cosa controllare'
+      ]}
+    ],
+    branches:[]
+  }
+]
+
+const GUIDES = {
+  flow: {
+    id:'flow', shortTitle:'Flusso inbound Energia', title:'Flusso inbound Energia con Marta AI',
+    desc:'Dal trasferimento della chiamata alla creazione del contratto su OneForm.',
+    kicker:'Guida operativa · 9 step', steps:FLOW_MARTA
+  },
+  call: {
+    id:'call', shortTitle:'Nuova Pratica AI', title:'Nuova modale Call · Pratica AI',
+    desc:'Come leggere la nuova Pratica AI nei trasferimenti da Marta AI e nelle lead da ricontattare.',
+    kicker:'Nuovo rilascio · 3 step', steps:FLOW_CALL, featured:true
+  }
+};
+
 /* ─── rendering ───────────────────────────────────── */
 const deck = document.getElementById('deck');
 const seg  = document.getElementById('seg');
+const prevB  = document.getElementById('prev');
+const nextB  = document.getElementById('next');
+const curEl  = document.getElementById('cur');
+const totEl  = document.getElementById('tot');
+const navLab = document.getElementById('navLabel');
+const barSub = document.getElementById('barSub');
 
-deck.insertAdjacentHTML('beforeend', `
+let currentGuide = null;
+let panels = [];
+let segs = [];
+let idx = 0;
+let io = null;
+
+function coverHTML(){
+  return `
   <section class="panel cover" id="p0">
-    <h1>Flusso inbound Energia con Marta AI</h1>
-    <p>Dal trasferimento della chiamata da Marta all’operatore fino alla creazione del contratto su OneForm. Nove step, con le opzioni disponibili in ciascuno.</p>
-    <div class="handoff">
-      <div class="h-di"><b>Direct Intelligence</b><span>Step 1–3 · trasferimento della chiamata e presa in carico</span></div>
-      <div class="h-of"><b>OneForm</b><span>Step 4–9 · catalogo offerte, completamento dati e controlli</span></div>
+    <h1>Guide operative Marta AI</h1>
+    <p>Le novità del flusso Energia spiegate in pochi step, con schermate reali e solo le informazioni utili in chiamata.</p>
+    <div class="guide-grid">
+      ${Object.values(GUIDES).map(g=>`
+        <button class="guide-card ${g.featured ? 'featured' : ''}" data-guide="${g.id}">
+          <div>
+            <span class="guide-kicker">${g.kicker}${g.featured ? '<span class="guide-badge">NUOVO</span>' : ''}</span>
+            <strong>${g.title}</strong>
+          </div>
+          <span class="guide-open">Apri &#8250;</span>
+          <p>${g.desc}</p>
+        </button>`).join('')}
     </div>
-    <button class="start" id="startBtn">Vai allo step 1 &#8250;</button>
-    <p class="hint">Scorri con il dito o usa le frecce per cambiare step. Tocca uno screenshot per ingrandirlo.</p>
-  </section>`);
+    <p class="hint">Scegli una guida. Poi scorri con il dito o usa le frecce. Tocca uno screenshot per ingrandirlo.</p>
+  </section>`;
+}
 
-FLOW.forEach(s => {
+function stepHTML(s){
   const hots = (s.hots||[]).map(h => `
     <span class="hot ${h.kind}" style="left:${h.x}%;top:${h.y}%;width:${h.w}%;height:${h.h}%">
       ${h.ref ? `<b>${h.ref}</b>` : ''}
@@ -588,7 +700,7 @@ FLOW.forEach(s => {
       </div>
     </details>`).join('');
 
-  deck.insertAdjacentHTML('beforeend', `
+  return `
     <section class="panel step" id="p${s.n}" data-n="${s.n}">
       <div class="p-head">
         <span class="chip ${s.app}"><i></i>${s.appName}</span>
@@ -605,97 +717,105 @@ FLOW.forEach(s => {
       </div>
       <div class="p-text">
         ${body}
-        <div class="sec"><h3>Opzioni disponibili</h3>${branches}</div>
+        ${branches ? `<div class="sec"><h3>Continua</h3>${branches}</div>` : ''}
       </div>
-    </section>`);
+    </section>`;
+}
 
-  seg.insertAdjacentHTML('beforeend',
-    `<button data-app="${s.app}" data-go="${s.n}" role="tab"
-             aria-label="Step ${s.n}: ${s.title}"></button>`);
-});
+function renderGuide(id, startAt=1){
+  currentGuide = GUIDES[id];
+  deck.innerHTML = coverHTML() + currentGuide.steps.map(stepHTML).join('');
+  seg.innerHTML = currentGuide.steps.map(s=>
+    `<button data-app="${s.app}" data-go="${s.n}" role="tab" aria-label="Step ${s.n}: ${s.title}"></button>`
+  ).join('');
+  bindPanels();
+  requestAnimationFrame(()=>goTo(startAt, false));
+}
 
-/* ─── navigazione ─────────────────────────────────── */
-const panels = [...deck.querySelectorAll('.panel')];
-const segs   = [...seg.querySelectorAll('button')];
-const prevB  = document.getElementById('prev');
-const nextB  = document.getElementById('next');
-const curEl  = document.getElementById('cur');
-const navLab = document.getElementById('navLabel');
-const barSub = document.getElementById('barSub');
-let idx = 0;
+function renderHome(){
+  currentGuide = null;
+  deck.innerHTML = coverHTML();
+  seg.innerHTML = '';
+  bindPanels();
+  paint(0);
+}
 
-function goTo(i, smooth = true){
-  i = Math.max(0, Math.min(panels.length-1, i));
-  deck.scrollTo({left: i * deck.clientWidth, behavior: smooth ? 'smooth' : 'auto'});
+function bindPanels(){
+  panels = [...deck.querySelectorAll('.panel')];
+  segs = [...seg.querySelectorAll('button')];
+  if(io) io.disconnect();
+  io = new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(e.isIntersecting && e.intersectionRatio > .55) paint(panels.indexOf(e.target));
+    });
+  }, {root:deck,threshold:[.55]});
+  panels.forEach(p=>io.observe(p));
+}
+
+function goTo(i, smooth=true){
+  if(!panels.length) return;
+  i=Math.max(0,Math.min(panels.length-1,i));
+  deck.scrollTo({left:i*deck.clientWidth,behavior:smooth?'smooth':'auto'});
 }
 
 function paint(i){
-  idx = i;
-  panels.forEach((p,k)=>p.classList.toggle('live', k===i));
+  idx=i;
+  panels.forEach((p,k)=>p.classList.toggle('live',k===i));
   segs.forEach((b,k)=>{
-    b.classList.toggle('on',  k <= i-1);
-    b.classList.toggle('cur', k === i-1);
+    b.classList.toggle('on',k<=i-1);
+    b.classList.toggle('cur',k===i-1);
   });
-  const s = FLOW[i-1];
-  curEl.textContent = i === 0 ? '—' : String(i).padStart(2,'0');
-  navLab.textContent = s ? s.title : 'Panoramica';
-  barSub.textContent = s ? s.appName : 'Supermoney Energia';
-  prevB.disabled = i === 0;
-  nextB.disabled = i === panels.length-1;
+  const s=currentGuide && i>0 ? currentGuide.steps[i-1] : null;
+  curEl.textContent=i===0?'—':String(i).padStart(2,'0');
+  totEl.textContent=currentGuide?currentGuide.steps.length:'—';
+  navLab.textContent=s?s.title:'Guide disponibili';
+  barSub.textContent=s?s.appName:(currentGuide?currentGuide.shortTitle:'Supermoney Energia');
+  prevB.disabled=i===0;
+  nextB.disabled=!currentGuide || i===panels.length-1;
 }
 
-const io = new IntersectionObserver(es=>{
-  es.forEach(e=>{
-    if(e.isIntersecting && e.intersectionRatio > .55){
-      paint(panels.indexOf(e.target));
-    }
-  });
-}, {root: deck, threshold:[.55]});
-panels.forEach(p=>io.observe(p));
+prevB.onclick=()=>goTo(idx-1);
+nextB.onclick=()=>goTo(idx+1);
 
-prevB.onclick = ()=>goTo(idx-1);
-nextB.onclick = ()=>goTo(idx+1);
-document.getElementById('startBtn').onclick = ()=>goTo(1);
-seg.addEventListener('click', e=>{
-  const b = e.target.closest('button[data-go]');
+seg.addEventListener('click',e=>{
+  const b=e.target.closest('button[data-go]');
   if(b) goTo(+b.dataset.go);
 });
-deck.addEventListener('click', e=>{
-  const j = e.target.closest('.jump');
-  if(j) goTo(+j.dataset.to);
+
+deck.addEventListener('click',e=>{
+  const g=e.target.closest('.guide-card[data-guide]');
+  if(g){renderGuide(g.dataset.guide,1);return;}
+  const j=e.target.closest('.jump');
+  if(j){goTo(+j.dataset.to);return;}
+  const shot=e.target.closest('.shot');
+  if(shot) openLb(shot.dataset.img,shot.querySelector('img').alt);
 });
-addEventListener('keydown', e=>{
+
+deck.addEventListener('keydown',e=>{
+  const s=e.target.closest('.shot');
+  if(s&&(e.key==='Enter'||e.key===' ')){
+    e.preventDefault();openLb(s.dataset.img,s.querySelector('img').alt);
+  }
+});
+
+addEventListener('keydown',e=>{
   if(document.getElementById('lb').classList.contains('on')){
-    if(e.key === 'Escape') closeLb();
+    if(e.key==='Escape') closeLb();
     return;
   }
-  if(e.key === 'ArrowRight'){ e.preventDefault(); goTo(idx+1); }
-  if(e.key === 'ArrowLeft'){  e.preventDefault(); goTo(idx-1); }
+  if(e.key==='ArrowRight'&&!nextB.disabled){e.preventDefault();goTo(idx+1);}
+  if(e.key==='ArrowLeft'&&!prevB.disabled){e.preventDefault();goTo(idx-1);}
 });
-addEventListener('resize', ()=>goTo(idx, false));
+addEventListener('resize',()=>goTo(idx,false));
 
 /* ─── lightbox ────────────────────────────────────── */
-const lb = document.getElementById('lb'), lbImg = document.getElementById('lbImg');
-function openLb(src, alt){
-  lbImg.src = src; lbImg.alt = alt || '';
-  lb.classList.add('on'); lb.scrollTop = 0;
-}
-function closeLb(){ lb.classList.remove('on'); }
-deck.addEventListener('click', e=>{
-  const s = e.target.closest('.shot');
-  if(s) openLb(s.dataset.img, s.querySelector('img').alt);
-});
-deck.addEventListener('keydown', e=>{
-  const s = e.target.closest('.shot');
-  if(s && (e.key === 'Enter' || e.key === ' ')){
-    e.preventDefault(); openLb(s.dataset.img, s.querySelector('img').alt);
-  }
-});
-document.getElementById('lbX').onclick = closeLb;
-lb.addEventListener('click', e=>{ if(e.target === lb) closeLb(); });
+const lb=document.getElementById('lb'),lbImg=document.getElementById('lbImg');
+function openLb(src,alt){lbImg.src=src;lbImg.alt=alt||'';lb.classList.add('on');lb.scrollTop=0;}
+function closeLb(){lb.classList.remove('on');}
+document.getElementById('lbX').onclick=closeLb;
+lb.addEventListener('click',e=>{if(e.target===lb) closeLb();});
 
-document.getElementById('tot').textContent = FLOW.length;
-paint(0);
+renderHome();
 </script>
 </body>
 </html>
