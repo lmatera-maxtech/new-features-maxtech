@@ -724,6 +724,7 @@ function stepHTML(s){
 
 function renderGuide(id, startAt=1){
   currentGuide = GUIDES[id];
+  if(location.hash !== `#${id}`) history.pushState(null, '', `#${id}`);
   deck.innerHTML = coverHTML() + currentGuide.steps.map(stepHTML).join('');
   seg.innerHTML = currentGuide.steps.map(s=>
     `<button data-app="${s.app}" data-go="${s.n}" role="tab" aria-label="Step ${s.n}: ${s.title}"></button>`
@@ -815,7 +816,15 @@ function closeLb(){lb.classList.remove('on');}
 document.getElementById('lbX').onclick=closeLb;
 lb.addEventListener('click',e=>{if(e.target===lb) closeLb();});
 
-renderHome();
+function renderFromHash(){
+  const id = location.hash.slice(1);
+  closeLb();
+  if(Object.prototype.hasOwnProperty.call(GUIDES, id)) renderGuide(id);
+  else renderHome();
+}
+
+addEventListener('hashchange', renderFromHash);
+renderFromHash();
 </script>
 </body>
 </html>
